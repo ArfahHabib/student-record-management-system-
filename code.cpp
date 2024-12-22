@@ -270,6 +270,109 @@ void removeCourse(CourseNode*& head, const string& courseName)
     }
 }
 
+/ Function to display available courses using BFS (Breadth First Search)
+void displayAvailableCoursesBFS(const vector<string>& allCourses)
+{
+    if(allCourses.empty())
+    {
+        cout<<"No courses available.\n";
+        return;
+    }
+
+    cout<<"Available Courses (BFS):\n";
+
+    list<string> courseQueue; // Queue for BFS traversal
+
+    // Start from the first course in the list
+    courseQueue.push_back(allCourses[0]);
+
+    // Visited array to track which courses have been displayed
+    bool visited[allCourses.size()]={false};
+
+    visited[0]=true; // Mark the first course as visited
+
+    while(!courseQueue.empty())
+    {
+        string currentCourse=courseQueue.front(); // Dequeue
+        courseQueue.pop_front();
+
+        cout<<currentCourse<<endl; // Display the current course
+
+        // Find the index of the current course
+        int courseIndex=-1;
+        for(int i=0;i<allCourses.size();++i)
+        {
+            if(allCourses[i]==currentCourse)
+            {
+                courseIndex=i;
+                break;
+            }
+        }
+
+        // If we have a valid index, let's proceed with the BFS traversal
+        if(courseIndex!=-1)
+        {
+            // In this case, all courses are considered neighbors for simplicity
+            for(int i=0;i<allCourses.size();++i)
+            {
+                if(!visited[i])
+                {
+                    visited[i]=true;                    // Mark the neighbor course as visited
+                    courseQueue.push_back(allCourses[i]); // Enqueue the neighbor course
+                }
+            }
+        }
+    }
+}
+
+    // Function to display registered courses by a student
+    void displayRegisteredCourses(const vector<string> &registeredCourses)
+    {
+        if (registeredCourses.empty())
+        {
+            cout << "No courses registered yet.\n";
+        }
+        else
+        {
+            cout << "Registered Courses:\n";
+            for (const auto &course : registeredCourses)
+            {
+                cout << course << endl;
+            }
+        }
+    }
+
+   // Function to register a course for the student
+bool registerCourse(vector<string>& registeredCourses, const vector<string>& availableCourses)
+{
+    int courseIndex;
+    cout<<"Enter the course number (starting from 0) you want to register for: ";
+    cin>>courseIndex;
+
+    // Check if the course index is valid
+    if(courseIndex<0||courseIndex>=availableCourses.size())
+    {
+        cout<<"Invalid course selection.\n";
+        return false;
+    }
+
+    string courseToRegister = availableCourses[courseIndex];
+
+    // Check for duplicate registration
+    for(const auto& course : registeredCourses)
+    {
+        if(course==courseToRegister)
+        {
+            cout<<"You are already registered for this course.\n";
+            return false;
+        }
+    }
+
+    // Add the course to the registered courses list
+    registeredCourses.push_back(courseToRegister);
+    cout<<"You have successfully registered for "<<courseToRegister<<".\n";
+    return true;
+}
 
     void studentMenu(const string &username)
     {
