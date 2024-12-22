@@ -6,6 +6,62 @@
 #include <vector>
 
 using namespace std;
+
+// BSTNode structure to store course names and grades
+struct BSTNode
+{
+    string course; // Course name
+    float grade;   // Grade for the course
+    BSTNode *left;
+    BSTNode *right;
+
+    BSTNode(string c, float g) : course(c), grade(g), left(NULL), right(NULL) {}
+};
+
+// Simple Hash Map structure for storing users and their courses
+struct HashMapTable
+{
+    list<pair<string,string>> *table; // Array of lists to store user-course pairs
+    int table_size;
+
+    // Constructor to initialize the hash table
+    HashMapTable(int ts)
+    {
+        table_size=ts;
+        table=new list<pair<string,string>>[table_size];
+    }
+
+    // Simple hash function to map usernames to the table
+    int hashFunction(const string& key)
+    {
+        int hashValue=0;
+        for (char c:key)
+        {
+            hashValue+=c;
+        }
+        return hashValue%table_size;
+    }
+
+    // Register a user with a course
+    void registerUser(const string& username,const string& course)
+    {
+        int index=hashFunction(username);
+        table[index].push_back(make_pair(username,course));
+    }
+
+    // Display courses registered by the user
+    void displayUserCourses(const string& username)
+    {
+        int index=hashFunction(username);
+        for (auto& entry:table[index])
+        {
+            if (entry.first==username)
+            {
+                cout<<"Course: "<<entry.second<<endl;
+            }
+        }
+    }
+};
 // Struct for User Node
 struct UserNode
 {
