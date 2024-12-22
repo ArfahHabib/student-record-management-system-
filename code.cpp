@@ -636,20 +636,213 @@ void viewAllRecords()
     // Clean up
     delete[] userArray;
 }
-    void studentMenu(const string &username)
+
+ // Function to search for a user by username
+UserNode* searchUserByUsername(const string& username)
+{
+    UserNode* temp = userHead;
+    while(temp!=NULL)
     {
-        // student function
+        if(temp->username==username)
+        {
+            return temp; // Return the found user
+        }
+        temp = temp->next;
+    }
+    return NULL; // User not found
+}
+
+// Function to generate a student report
+// Function to generate a student report with courses and grades
+void generateStudentReport(BSTNode* root, vector<string>& courses)
+{
+    // Display available courses
+    cout<<"Student Report - Courses and Grades:" << endl;
+
+    // Ensure courses and grades are displayed
+    if(root==NULL)
+    {
+        cout<<"No courses or grades available!" << endl;
+        return;
     }
 
-    void facultyMenu(const string &username)
-    {
-        // faculty function
-    }
+    // In-order traversal will display courses and their corresponding grades
+    inOrderTraversal(root);
 
-    void adminMenu()
+    // Optionally, display courses directly if grades are in the stack or list
+    cout<<"\nCourses List (without grades):" << endl;
+    for(int i=0;i<courses.size();++i)
     {
-        // admin function
+        cout<<i+1<<". "<<courses[i] << endl;
     }
+}
+
+  void studentMenu(const string& username)
+{
+    // Declare variables at the start of the function
+    string filename="courses.txt";  // File with course data
+    vector<string> allCourses;        // All available courses
+    vector<string> registeredCourses; // Registered courses by the student
+
+    // Load the courses from the file
+    loadCoursesFromFile(filename, allCourses);
+
+    bool registrationSuccess=false; // Initialize this before switch
+
+    while(true)
+    {
+        int choice;
+        cout<<"\n1. Display available courses\n2. Register for a course\n3. View registered courses\n4. Exit\n";
+        cout<<"Enter your choice: ";
+        cin>>choice;
+
+        switch(choice)
+        {
+        case 1:
+            displayAvailableCoursesBFS(allCourses);
+            break;
+
+        case 2:
+            registrationSuccess=registerCourse(registeredCourses, allCourses);
+            if(registrationSuccess)
+            {
+                cout<<"Registration successful.\n";
+            }
+            else
+            {
+                cout<<"Registration failed.\n";
+            }
+            break;
+
+        case 3:
+            displayRegisteredCourses(registeredCourses);
+            break;
+
+        case 4:
+            cout<<"Exiting...\n";
+            return; // Exit the loop and function
+
+        default:
+            cout<<"Invalid choice. Please try again.\n";
+            break;
+        }
+    }
+}
+
+   void facultyMenu(const string& username)
+{
+    // Declare and initialize the stack and root
+    stack<float> gradeStack;         // Stack to hold grades
+    BSTNode* root=NULL;              // Root of the Binary Search Tree (BST)
+    string courseName;               // Declare the courseName variable here
+    string filename="courses.txt";   // File with course data
+    vector<string> allCourses;       // All available courses
+    // Load the courses from the file
+    loadCoursesFromFile(filename, allCourses);
+
+    while(true)
+    {
+        cout<<"\n===== Faculty Menu =====\n";
+        cout<<"1. Assign Grades\n";
+        cout<<"2. Add Course\n";
+        cout<<"3. Remove Course\n";
+        cout<<"4. View Course List\n";
+        cout<<"5. Logout\n";
+        cout<<"Enter your choice: ";
+        int choice;
+        cin>>choice;
+
+        switch(choice)
+        {
+        case 1:
+            // Get the grade to assign
+            float grade;
+            cout<<"Enter grade to assign: ";
+            cin>>grade;
+            assignGrade(gradeStack, root, grade, allCourses);
+            break;
+
+        case 2:
+            cout<<"Enter course name to add: ";
+            cin>>courseName;
+            addCourse(courseRoot, courseName); // Now passing the course name
+            break;
+        case 3:
+        {
+            cout<<"Enter course name to remove: ";
+            cin>>courseName;
+            removeCourse(courseRoot, courseName);
+            break;
+        }
+        case 4:
+            displayAvailableCoursesBFS(allCourses);
+            break;
+        case 6:
+            cout<<"Logging out...\n";
+            return;
+        default:
+            cout<<"Invalid choice! Try again.\n";
+        }
+    }
+}
+
+void adminMenu()
+{
+    // Declare variables at the start of the function
+    string filename="courses.txt";   // File with course data
+    vector<string> allCourses;       // All available courses
+    BSTNode* root;
+    // Load the courses from the file
+    loadCoursesFromFile(filename, allCourses);
+    while(true)
+    {
+        cout<<"\n===== Admin Menu =====\n";
+        cout<<"1. Register New User\n";
+        cout<<"2. Remove User\n";
+        cout<<"3. View User List\n";
+        cout<<"4. View All Courses\n";
+        cout<<"5. Generate Reports\n";
+        cout<<"6. Logout\n";
+        cout<<"Enter your choice: ";
+        int choice;
+        cin>>choice;
+
+        switch(choice)
+        {
+        case 1:
+            registerUser();
+            break;
+        case 2:
+        {
+            string username;
+            cout<<"Enter the username to delete: ";
+            getline(cin, username);
+            removeUser(username);
+            break;
+        }
+        case 3:
+            viewAllRecords();
+            break;
+        case 4:
+            displayAvailableCoursesBFS(allCourses);
+            break;
+        case 5:
+        {
+            string username;
+            cout<<"Enter the username for the report: ";
+            cin>>username;
+            generateStudentReport(root, allCourses); // Pass the username to generate the report
+        }
+        break;
+
+        case 6:
+            cout<<"Logging out...\n";
+            return;
+        default:
+            cout<<"Invalid choice! Try again.\n";
+        }
+    }
+}
 };
 
 int main()
