@@ -1,8 +1,8 @@
-//testing
-//STUDENT RECORD MANAGENT SYSTEM
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <list>
+#include <stack>
 #include <vector>
 
 using namespace std;
@@ -269,7 +269,9 @@ void removeCourse(CourseNode*& head, const string& courseName)
         cout<<"Course '"<<courseName<<"' removed."<<endl;
     }
 }
- // Function to load courses from a file
+
+
+    // Function to load courses from a file
 void loadCoursesFromFile(const string& filename, vector<string>& allCourses)
 {
     ifstream file(filename);
@@ -288,8 +290,7 @@ void loadCoursesFromFile(const string& filename, vector<string>& allCourses)
     file.close();
 }
 
-
-/ Function to display available courses using BFS (Breadth First Search)
+// Function to display available courses using BFS (Breadth First Search)
 void displayAvailableCoursesBFS(const vector<string>& allCourses)
 {
     if(allCourses.empty())
@@ -393,7 +394,7 @@ bool registerCourse(vector<string>& registeredCourses, const vector<string>& ava
     return true;
 }
 
-  // Binary Search Tree to store and display grades
+// Binary Search Tree to store and display grades
 void insertGrade(BSTNode*& root, const string& course, float grade)
 {
     if(root==NULL)
@@ -637,7 +638,8 @@ void viewAllRecords()
     delete[] userArray;
 }
 
- // Function to search for a user by username
+
+    // Function to search for a user by username
 UserNode* searchUserByUsername(const string& username)
 {
     UserNode* temp = userHead;
@@ -677,7 +679,7 @@ void generateStudentReport(BSTNode* root, vector<string>& courses)
     }
 }
 
-  void studentMenu(const string& username)
+void studentMenu(const string& username)
 {
     // Declare variables at the start of the function
     string filename="courses.txt";  // File with course data
@@ -852,13 +854,10 @@ int main()
 
     do
     {
-        cout << "1. Register:" << endl;
-        cout << " 2. Login:" << endl;
-        cout << "3. Exit:" << endl;
-        cout << "Choose an option: ";
-        cin >> choice;
+        cout<<"1. Register\n2. Login\n3. Exit\nChoose an option: ";
+        cin>>choice;
 
-        switch (choice)
+        switch(choice)
         {
         case 1:
             system.registerUser();
@@ -866,17 +865,17 @@ int main()
         case 2:
         {
             string role;
-            if (system.loginUser(role))
+            if(system.loginUser(role))
             {
-                if (role == "student")
+                if(role=="student")
                 {
                     system.studentMenu(role);
                 }
-                else if (role == "faculty")
+                else if(role=="faculty")
                 {
                     system.facultyMenu(role);
                 }
-                else if (role == "admin")
+                else if(role=="admin")
                 {
                     system.adminMenu();
                 }
@@ -884,12 +883,12 @@ int main()
             break;
         }
         case 3:
-            cout << "Exiting...\n";
+            cout<<"Exiting..."<<endl;
             break;
         default:
-            cout << "Invalid choice! Please try again.\n";
+            cout<<"Invalid choice! Please try again."<<endl;
         }
-    } while (choice != 3);
+    } while(choice!=3);
 
     return 0;
 }
