@@ -459,7 +459,183 @@ void inOrderTraversal(BSTNode* root)
     cout<<"Grade assigned to "<<courses[courseChoice-1]<<" successfully!"<<endl;
 }
 
+void removeUser(const string& username, const string& filename="user_records.txt")
+{
+    // Open the file in read mode
+    ifstream inputFile(filename);
+    if(!inputFile)
+    {
+        cerr<<"Error opening file!"<<endl;
+        return;
+    }
 
+    // Read all lines into a vector
+    vector<string> lines;
+    string line;
+    while(getline(inputFile, line))
+    {
+        lines.push_back(line);
+    }
+    inputFile.close();
+
+    // Open the file in write mode to overwrite it
+    ofstream outputFile(filename);
+    if(!outputFile)
+    {
+        cerr<<"Error opening file for writing!"<<endl;
+        return;
+    }
+
+    bool userFound = false;
+
+    // Write all lines back to the file except the line containing the exact username
+    for(const auto& line : lines)
+    {
+        // Check for exact match of the username (you can adjust this based on the format)
+        if(line.substr(0, username.length())==username)
+        {
+            userFound=true; // Found the user
+            continue;       // Skip this line
+        }
+        outputFile<<line<<endl;
+    }
+
+    // Notify if the user was found and deleted
+    if(userFound)
+    {
+        cout<<"User '"<<username<<"' has been deleted."<<endl;
+    }
+    else
+    {
+        cout<<"User '"<<username<<"' not found."<<endl;
+    }
+
+    outputFile.close();
+}
+
+
+  // Function to perform selection sort based on username
+void selectionSort(UserNode* arr, int size)
+{
+    for(int i=0; i<size-1; i++)
+    {
+        int minIndex=i;
+        for(int j=i+1; j<size; j++)
+        {
+            if(arr[j].username<arr[minIndex].username)
+            {
+                minIndex=j;
+            }
+        }
+        // Swap the found minimum element with the first element
+        if(minIndex!=i)
+        {
+            UserNode temp=arr[i];
+            arr[i]=arr[minIndex];
+            arr[minIndex]=temp;
+        }
+    }
+}
+
+// Function to display records (recursive)
+void displayRecords(UserNode* arr, int left, int right)
+{
+    if(left<=right)
+    {
+        cout<<"Username: "<<arr[left].username<<", Role: "<<arr[left].role<<endl;
+        displayRecords(arr, left+1, right);
+    }
+}
+
+// Function to view all user records, sort them, and display
+void viewAllRecords()
+{
+    ifstream file("user_records.txt");
+
+    // If file doesn't exist, create it
+    if(!file.is_open())
+    {
+        cout<<"No existing file found. Creating a new file."<<endl;
+        file.close();
+        ofstream newFile("user_records.txt");
+        newFile.close(); // Close after creating
+        return;
+    }
+
+    // Count the number of users in the file
+    int userCount=0;
+    string line;
+    while(getline(file, line))
+    {
+        userCount++;
+    }
+
+    // Create an array to store the user records
+    UserNode* userArray=new UserNode[userCount];
+
+    // Reset the file pointer to the beginning of the file
+    file.clear();
+    file.seekg(0, ios::beg);
+
+    // Parse each user record from the file
+    int i=0;
+    while(getline(file, line))
+    {
+        int j=0; // Used to keep track of position in the string
+        string username="", password="", role="";
+
+        // Extract the username
+        while(line[j]!=' '&&j<line.length())
+        {
+            username+=line[j]; // Add character to username until we hit a space
+            j++;
+        }
+        j++; // Skip the space after username
+
+        // Extract the password
+        while(line[j]!=' '&&j<line.length())
+        {
+            password+=line[j]; // Add character to password until we hit a space
+            j++;
+        }
+        j++; // Skip the space after password
+
+        // Extract the role (everything remaining after the second space)
+        while(j<line.length())
+        {
+            role+=line[j]; // Add remaining characters to role
+            j++;
+        }
+
+        // Store the values in the array
+        userArray[i].username=username;
+        userArray[i].password=password;
+        userArray[i].role=role;
+
+        i++; // Move to the next index in the array
+    }
+
+    // Sort the user records by username using Selection Sort
+    selectionSort(userArray, userCount);
+
+    // Display the sorted records using recursion
+    cout<<"Displaying all user records:\n";
+    displayRecords(userArray, 0, userCount-1);
+
+    // Write the updated records back to the file
+    ofstream outFile("user_records.txt");
+    if(outFile.is_open())
+    {
+        for(int i=0; i<userCount; i++)
+        {
+            outFile<<userArray[i].username<<" "<<userArray[i].password<<" "<<userArray[i].role<<"\n";
+        }
+        outFile.close();
+    }
+
+    // Clean up
+    delete[] userArray;
+}
     void studentMenu(const string &username)
     {
         // student function
