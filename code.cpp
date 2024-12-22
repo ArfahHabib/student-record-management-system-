@@ -269,6 +269,25 @@ void removeCourse(CourseNode*& head, const string& courseName)
         cout<<"Course '"<<courseName<<"' removed."<<endl;
     }
 }
+ // Function to load courses from a file
+void loadCoursesFromFile(const string& filename, vector<string>& allCourses)
+{
+    ifstream file(filename);
+    if(!file.is_open())
+    {
+        cout<<"Error opening file:"<<filename<<endl;
+        return;
+    }
+
+    string course;
+    while(file>>course)
+    {
+        allCourses.push_back(course); // Add course to the available courses list
+    }
+
+    file.close();
+}
+
 
 / Function to display available courses using BFS (Breadth First Search)
 void displayAvailableCoursesBFS(const vector<string>& allCourses)
@@ -373,6 +392,73 @@ bool registerCourse(vector<string>& registeredCourses, const vector<string>& ava
     cout<<"You have successfully registered for "<<courseToRegister<<".\n";
     return true;
 }
+
+  // Binary Search Tree to store and display grades
+void insertGrade(BSTNode*& root, const string& course, float grade)
+{
+    if(root==NULL)
+    {
+        root=new BSTNode(course, grade);
+    }
+    else
+    {
+        if(course<root->course)
+        {
+            insertGrade(root->left, course, grade);
+        }
+        else
+        {
+            insertGrade(root->right, course, grade);
+        }
+    }
+}
+
+// Helper function to perform an in-order traversal of the BST and display courses and grades
+void inOrderTraversal(BSTNode* root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    inOrderTraversal(root->left);
+    cout<<"Course: "<<root->course<<" - Grade: "<<root->grade<<endl;
+    inOrderTraversal(root->right);
+}
+
+
+    void assignGrade(stack<float>& gradeStack, BSTNode*& root, float grade, vector<string>& courses)
+{
+    // Display available courses
+    cout<<"Select a course to assign a grade:"<<endl;
+    for(int i=0; i<courses.size(); ++i)
+    {
+        cout<<i+1<<". "<<courses[i]<<endl;
+    }
+
+    // Ask user to choose a course
+    int courseChoice;
+    cout<<"Enter the number of the course: ";
+    cin>>courseChoice;
+
+    if(courseChoice<1||courseChoice>courses.size())
+    {
+        cout<<"Invalid course choice!"<<endl;
+        return;
+    }
+
+    // Ask for grade input
+    cout<<"Enter the grade for the course "<<courses[courseChoice-1]<<": ";
+    cin>>grade;
+
+    // Assign grade by pushing onto the stack
+    gradeStack.push(grade);
+
+    // Insert grade into the BST (passing both course and grade)
+    insertGrade(root, courses[courseChoice-1], grade);
+
+    cout<<"Grade assigned to "<<courses[courseChoice-1]<<" successfully!"<<endl;
+}
+
 
     void studentMenu(const string &username)
     {
