@@ -7,11 +7,11 @@
 
 using namespace std;
 
-// BSTNode structure to store course names and grades
+// BSTnode structure to store course names and grades
 struct BSTNode
 {
-    string course; // Course name
-    float grade;   // Grade for the course
+    string course; 
+    float grade;   
     BSTNode *left;
     BSTNode *right;
 
@@ -21,17 +21,17 @@ struct BSTNode
 // Simple Hash Map structure for storing users and their courses
 struct HashMapTable
 {
-    list<pair<string,string>> *table; // Array of lists to store user-course pairs
+    list<pair<string,string>> *table; 
     int table_size;
 
-    // Constructor to initialize the hash table
+    
     HashMapTable(int ts)
     {
         table_size=ts;
         table=new list<pair<string,string>>[table_size];
     }
 
-    // Simple hash function to map usernames to the table
+  
     int hashFunction(const string& key)
     {
         int hashValue=0;
@@ -67,12 +67,12 @@ struct UserNode
 {
     string username;
     string password;
-    string role;          // "student", "faculty", "admin"
-    list<string> courses; // List of course names
+    string role;          
+    list<string> courses; 
     UserNode *next;
 };
 
-// Struct for Course Node (Binary Search Tree)
+
 struct CourseNode
 {
     string courseName;
@@ -85,22 +85,22 @@ struct CourseNode
 class ManagementSystem
 {
 private:
-    UserNode *userHead;     // Head of user linked list
-    CourseNode *courseRoot; // Root of course BST
+    UserNode *userHead;     
+    CourseNode *courseRoot; 
 
-    vector<vector<int>> courseGraph; // 2D vector to store course relationships
+    vector<vector<int>> courseGraph; 
 
 public:
-    // CourseNode* head;
+   
     ManagementSystem() : userHead(NULL), courseRoot(NULL)
     {
-        courseGraph.resize(100); // Initialize the courseGraph with 100 courses
+        courseGraph.resize(100); 
     }
 
-     void registerUser(){ // LIST
+     void registerUser(){
     string username, password, role;
 
-    // Get user details
+    
     cout<<"Enter username: ";
     cin>>username;
     cout<<"Enter password: ";
@@ -108,18 +108,16 @@ public:
     cout<<"Enter role (student/faculty/admin): ";
     cin>>role;
 
-    // Create a new user node
-    // UserNode* newUser = new UserNode{username, password, role, nullptr};
+    
     UserNode* newUser = new UserNode;
     newUser->username=username;
     newUser->password=password;
     newUser->role=role;
     newUser->next=NULL;
 
-    // Add to linked list
     if(userHead==NULL)
     {
-        userHead=newUser; // First user
+        userHead=newUser; 
     }
     else
     {
@@ -128,10 +126,10 @@ public:
         {
             temp=temp->next;
         }
-        temp->next=newUser; // Add at the end
+        temp->next=newUser; 
     }
 
-    // Save user to file
+ 
     ofstream outFile("user_records.txt", ios::app);
     if(outFile.is_open())
     {
@@ -146,22 +144,22 @@ public:
 }
 
    bool loginUser(string& role)
-{ // LIST
+{ 
     string username, password;
 
-    // Login credentials
+    
     cout<<"Enter username: ";
     cin>>username;
     cout<<"Enter password: ";
     cin>>password;
 
-    // Search linked list for the user
+   
     UserNode* temp=userHead;
     while(temp!=NULL)
     {
         if(temp->username==username && temp->password==password)
         {
-            role=temp->role; // Assign role for subsequent menu logic
+            role=temp->role; 
             cout<<"Login successful!\n";
             return true;
         }
@@ -172,22 +170,22 @@ public:
     return false;
 }
 
-    // Function to add a course to the linked list
+    
 void addCourse(CourseNode*& head, const string& courseName)
 {
-    // Create a new node for the course
+    
     CourseNode* newCourse = new CourseNode;
     newCourse->courseName=courseName;
     newCourse->next=NULL;
 
-    // If the list is empty, new course becomes the head
+   
     if(head==NULL)
     {
         head=newCourse;
     }
     else
     {
-        // Traverse to the end and insert the course
+        
         CourseNode* temp=head;
         while(temp->next!=NULL)
         {
@@ -196,7 +194,7 @@ void addCourse(CourseNode*& head, const string& courseName)
         temp->next=newCourse;
     }
 
-    // Save to file
+ 
     ofstream file("courses.txt", ios::app);
     if(file.is_open())
     {
@@ -209,10 +207,10 @@ void addCourse(CourseNode*& head, const string& courseName)
     }
 }
 
-// Function to remove a course from the linked list
+
 void removeCourse(CourseNode*& head, const string& courseName)
 {
-    // After removal, update the file with the new course list
+    
     ofstream file("courses.txt", ios::trunc);
     if(file.is_open())
     {
@@ -230,24 +228,24 @@ void removeCourse(CourseNode*& head, const string& courseName)
         cout<<"Error opening file."<<endl;
     }
 
-    // If the list is empty, no course to remove
+    
     if(head==NULL)
     {
         cout<<"The course list is empty."<<endl;
         return;
     }
 
-    // If the course to remove is the first course
+    
     if(head->courseName==courseName)
     {
         CourseNode* temp=head;
-        head=head->next; // Move head to the next course
-        delete temp;     // Delete the node
+        head=head->next; 
+        delete temp;     
         cout<<"Course '"<<courseName<<"' removed."<<endl;
     }
     else
     {
-        // Traverse to find the course node to remove
+        
         CourseNode* temp=head;
         CourseNode* prev=NULL;
 
@@ -263,15 +261,15 @@ void removeCourse(CourseNode*& head, const string& courseName)
             return;
         }
 
-        // Remove the node by adjusting the previous node's next pointer
+        
         prev->next=temp->next;
-        delete temp; // Delete the course node
+        delete temp; 
         cout<<"Course '"<<courseName<<"' removed."<<endl;
     }
 }
 
 
-    // Function to load courses from a file
+    
 void loadCoursesFromFile(const string& filename, vector<string>& allCourses)
 {
     ifstream file(filename);
@@ -284,13 +282,13 @@ void loadCoursesFromFile(const string& filename, vector<string>& allCourses)
     string course;
     while(file>>course)
     {
-        allCourses.push_back(course); // Add course to the available courses list
+        allCourses.push_back(course); 
     }
 
     file.close();
 }
 
-// Function to display available courses using BFS (Breadth First Search)
+
 void displayAvailableCoursesBFS(const vector<string>& allCourses)
 {
     if(allCourses.empty())
@@ -301,24 +299,24 @@ void displayAvailableCoursesBFS(const vector<string>& allCourses)
 
     cout<<"Available Courses (BFS):\n";
 
-    list<string> courseQueue; // Queue for BFS traversal
+    list<string> courseQueue; 
 
-    // Start from the first course in the list
+    
     courseQueue.push_back(allCourses[0]);
 
-    // Visited array to track which courses have been displayed
+    
     bool visited[allCourses.size()]={false};
 
-    visited[0]=true; // Mark the first course as visited
+    visited[0]=true; 
 
     while(!courseQueue.empty())
     {
-        string currentCourse=courseQueue.front(); // Dequeue
+        string currentCourse=courseQueue.front(); 
         courseQueue.pop_front();
 
-        cout<<currentCourse<<endl; // Display the current course
+        cout<<currentCourse<<endl; 
 
-        // Find the index of the current course
+        
         int courseIndex=-1;
         for(int i=0;i<allCourses.size();++i)
         {
@@ -329,23 +327,23 @@ void displayAvailableCoursesBFS(const vector<string>& allCourses)
             }
         }
 
-        // If we have a valid index, let's proceed with the BFS traversal
+        
         if(courseIndex!=-1)
         {
-            // In this case, all courses are considered neighbors for simplicity
+            
             for(int i=0;i<allCourses.size();++i)
             {
                 if(!visited[i])
                 {
-                    visited[i]=true;                    // Mark the neighbor course as visited
-                    courseQueue.push_back(allCourses[i]); // Enqueue the neighbor course
+                    visited[i]=true;                    
+                    courseQueue.push_back(allCourses[i]); 
                 }
             }
         }
     }
 }
 
-    // Function to display registered courses by a student
+    
     void displayRegisteredCourses(const vector<string> &registeredCourses)
     {
         if (registeredCourses.empty())
@@ -362,14 +360,14 @@ void displayAvailableCoursesBFS(const vector<string>& allCourses)
         }
     }
 
-   // Function to register a course for the student
+   
 bool registerCourse(vector<string>& registeredCourses, const vector<string>& availableCourses)
 {
     int courseIndex;
     cout<<"Enter the course number (starting from 0) you want to register for: ";
     cin>>courseIndex;
 
-    // Check if the course index is valid
+    
     if(courseIndex<0||courseIndex>=availableCourses.size())
     {
         cout<<"Invalid course selection.\n";
@@ -378,7 +376,7 @@ bool registerCourse(vector<string>& registeredCourses, const vector<string>& ava
 
     string courseToRegister = availableCourses[courseIndex];
 
-    // Check for duplicate registration
+    
     for(const auto& course : registeredCourses)
     {
         if(course==courseToRegister)
@@ -388,13 +386,11 @@ bool registerCourse(vector<string>& registeredCourses, const vector<string>& ava
         }
     }
 
-    // Add the course to the registered courses list
     registeredCourses.push_back(courseToRegister);
     cout<<"You have successfully registered for "<<courseToRegister<<".\n";
     return true;
 }
 
-// Binary Search Tree to store and display grades
 void insertGrade(BSTNode*& root, const string& course, float grade)
 {
     if(root==NULL)
@@ -414,7 +410,6 @@ void insertGrade(BSTNode*& root, const string& course, float grade)
     }
 }
 
-// Helper function to perform an in-order traversal of the BST and display courses and grades
 void inOrderTraversal(BSTNode* root)
 {
     if(root==NULL)
@@ -429,14 +424,14 @@ void inOrderTraversal(BSTNode* root)
 
     void assignGrade(stack<float>& gradeStack, BSTNode*& root, float grade, vector<string>& courses)
 {
-    // Display available courses
+
     cout<<"Select a course to assign a grade:"<<endl;
     for(int i=0; i<courses.size(); ++i)
     {
         cout<<i+1<<". "<<courses[i]<<endl;
     }
 
-    // Ask user to choose a course
+    
     int courseChoice;
     cout<<"Enter the number of the course: ";
     cin>>courseChoice;
@@ -447,14 +442,14 @@ void inOrderTraversal(BSTNode* root)
         return;
     }
 
-    // Ask for grade input
+    
     cout<<"Enter the grade for the course "<<courses[courseChoice-1]<<": ";
     cin>>grade;
 
-    // Assign grade by pushing onto the stack
+    
     gradeStack.push(grade);
 
-    // Insert grade into the BST (passing both course and grade)
+    
     insertGrade(root, courses[courseChoice-1], grade);
 
     cout<<"Grade assigned to "<<courses[courseChoice-1]<<" successfully!"<<endl;
@@ -495,13 +490,13 @@ void removeUser(const string& username, const string& filename="user_records.txt
         // Check for exact match of the username (you can adjust this based on the format)
         if(line.substr(0, username.length())==username)
         {
-            userFound=true; // Found the user
-            continue;       // Skip this line
+            userFound=true; 
+            continue;       
         }
         outputFile<<line<<endl;
     }
 
-    // Notify if the user was found and deleted
+   
     if(userFound)
     {
         cout<<"User '"<<username<<"' has been deleted."<<endl;
@@ -528,7 +523,7 @@ void selectionSort(UserNode* arr, int size)
                 minIndex=j;
             }
         }
-        // Swap the found minimum element with the first element
+        
         if(minIndex!=i)
         {
             UserNode temp=arr[i];
@@ -553,7 +548,6 @@ void viewAllRecords()
 {
     ifstream file("user_records.txt");
 
-    // If file doesn't exist, create it
     if(!file.is_open())
     {
         cout<<"No existing file found. Creating a new file."<<endl;
@@ -563,7 +557,7 @@ void viewAllRecords()
         return;
     }
 
-    // Count the number of users in the file
+  
     int userCount=0;
     string line;
     while(getline(file, line))
@@ -571,7 +565,6 @@ void viewAllRecords()
         userCount++;
     }
 
-    // Create an array to store the user records
     UserNode* userArray=new UserNode[userCount];
 
     // Reset the file pointer to the beginning of the file
@@ -585,37 +578,32 @@ void viewAllRecords()
         int j=0; // Used to keep track of position in the string
         string username="", password="", role="";
 
-        // Extract the username
         while(line[j]!=' '&&j<line.length())
         {
-            username+=line[j]; // Add character to username until we hit a space
+            username+=line[j]; 
             j++;
         }
-        j++; // Skip the space after username
+        j++; 
 
-        // Extract the password
         while(line[j]!=' '&&j<line.length())
         {
-            password+=line[j]; // Add character to password until we hit a space
+            password+=line[j];
             j++;
         }
-        j++; // Skip the space after password
+        j++; 
 
-        // Extract the role (everything remaining after the second space)
         while(j<line.length())
         {
-            role+=line[j]; // Add remaining characters to role
+            role+=line[j]; 
             j++;
         }
 
-        // Store the values in the array
         userArray[i].username=username;
         userArray[i].password=password;
         userArray[i].role=role;
 
-        i++; // Move to the next index in the array
+        i++; 
     }
-
     // Sort the user records by username using Selection Sort
     selectionSort(userArray, userCount);
 
@@ -634,7 +622,6 @@ void viewAllRecords()
         outFile.close();
     }
 
-    // Clean up
     delete[] userArray;
 }
 
@@ -654,24 +641,20 @@ UserNode* searchUserByUsername(const string& username)
     return NULL; // User not found
 }
 
-// Function to generate a student report
 // Function to generate a student report with courses and grades
 void generateStudentReport(BSTNode* root, vector<string>& courses)
 {
-    // Display available courses
+    
     cout<<"Student Report - Courses and Grades:" << endl;
-
-    // Ensure courses and grades are displayed
+    
     if(root==NULL)
     {
         cout<<"No courses or grades available!" << endl;
         return;
     }
 
-    // In-order traversal will display courses and their corresponding grades
     inOrderTraversal(root);
 
-    // Optionally, display courses directly if grades are in the stack or list
     cout<<"\nCourses List (without grades):" << endl;
     for(int i=0;i<courses.size();++i)
     {
@@ -681,15 +664,13 @@ void generateStudentReport(BSTNode* root, vector<string>& courses)
 
 void studentMenu(const string& username)
 {
-    // Declare variables at the start of the function
-    string filename="courses.txt";  // File with course data
-    vector<string> allCourses;        // All available courses
-    vector<string> registeredCourses; // Registered courses by the student
+    string filename="courses.txt"; 
+    vector<string> allCourses;       
+    vector<string> registeredCourses; 
 
-    // Load the courses from the file
     loadCoursesFromFile(filename, allCourses);
 
-    bool registrationSuccess=false; // Initialize this before switch
+    bool registrationSuccess=false;
 
     while(true)
     {
@@ -722,7 +703,7 @@ void studentMenu(const string& username)
 
         case 4:
             cout<<"Exiting...\n";
-            return; // Exit the loop and function
+            return; 
 
         default:
             cout<<"Invalid choice. Please try again.\n";
@@ -790,11 +771,10 @@ void studentMenu(const string& username)
 
 void adminMenu()
 {
-    // Declare variables at the start of the function
-    string filename="courses.txt";   // File with course data
-    vector<string> allCourses;       // All available courses
+    string filename="courses.txt";   
+    vector<string> allCourses;       
     BSTNode* root;
-    // Load the courses from the file
+
     loadCoursesFromFile(filename, allCourses);
     while(true)
     {
