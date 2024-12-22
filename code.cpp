@@ -14,15 +14,98 @@ struct UserNode
     list<string> courses; // List of course names
     UserNode *next;
 };
+
 // Class to manage the student management system
 class ManagementSystem
 {
 private:
-    UserNode *userHead;
+    UserNode *userHead;     // Head of user linked list
+    CourseNode *courseRoot; // Root of course BST
+
+    vector<vector<int>> courseGraph; // 2D vector to store course relationships
 
 public:
     // CourseNode* head;
-    ManagementSystem() : userHead(NULL) {}
+    ManagementSystem() : userHead(NULL), courseRoot(NULL)
+    {
+        courseGraph.resize(100); // Initialize the courseGraph with 100 courses
+    }
+
+    void registerUser()
+    { // LIST
+        string username, password, role;
+
+        // Get user details
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter password: ";
+        cin >> password;
+        cout << "Enter role (student/faculty/admin): ";
+        cin >> role;
+
+        // Create a new user node
+        // UserNode* newUser = new UserNode{username, password, role, nullptr};
+        UserNode *newUser = new UserNode;
+        newUser->username = username;
+        newUser->password = password;
+        newUser->role = role;
+        newUser->next = NULL;
+
+        // Add to linked list
+        if (userHead == NULL)
+        {
+            userHead = newUser; // First user
+        }
+        else
+        {
+            UserNode *temp = userHead;
+            while (temp->next != NULL)
+            {
+                temp = temp->next;
+            }
+            temp->next = newUser; // Add at the end
+        }
+
+        // Save user to file
+        ofstream outFile("user_records.txt", ios::app);
+        if (outFile.is_open())
+        {
+            outFile << username << " " << password << " " << role << "\n";
+            outFile.close();
+            cout << "User registered successfully!\n";
+        }
+        else
+        {
+            cout << "Failed to open user file for saving.\n";
+        }
+    }
+
+    bool loginUser(string &role)
+    { // LIST
+        string username, password;
+
+        // Login credentials
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter password: ";
+        cin >> password;
+
+        // Search linked list for the user
+        UserNode *temp = userHead;
+        while (temp != NULL)
+        {
+            if (temp->username == username && temp->password == password)
+            {
+                role = temp->role; // Assign role for subsequent menu logic
+                cout << "Login successful!\n";
+                return true;
+            }
+            temp = temp->next;
+        }
+
+        cout << "Invalid username or password. Try again.\n";
+        return false;
+    }
 
     void studentMenu(const string &username)
     {
